@@ -12,3 +12,7 @@ tmp/
 secrets/
 *.pem
 *.key
+
+.env.*
+backend/.env
+backend/.env.*
