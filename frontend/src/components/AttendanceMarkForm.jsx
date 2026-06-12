@@ -33,7 +33,7 @@ export default function AttendanceMarkForm() {
           <option value="">Select member…</option>
           {reports?.map(u => <option key={u.id} value={u.id}>{u.full_name || u.email} ({u.role})</option>)}
         </Select>
-        <Input type="date" value={date} onChange={e => setDate(e.target.value)} required />
+        <Input type="date" value={date} onChange={e => setDate(e.target.value)} max={new Date().toISOString().slice(0, 10)} required />
         <Select value={status} onChange={e => setStatus(e.target.value)}>
           <option value="PRESENT">Present</option>
           <option value="ABSENT">Absent</option>
