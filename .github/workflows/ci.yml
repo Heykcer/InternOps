@@ -61,6 +61,10 @@ jobs:
 
       - name: Run Jest tests
         run: cd backend && npm test -- --forceExit --detectOpenHandles --runInBand
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/internops_test
+          JWT_SECRET: ci-test-secret-do-not-use-in-prod
 
       - name: Install frontend dependencies
         run: cd frontend && npm ci
