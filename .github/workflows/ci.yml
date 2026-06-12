@@ -14,9 +14,9 @@ jobs:
       postgres:
         image: postgres:14
         env:
-          POSTGRES_USER: root
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: root
+          POSTGRES_DB: internops_test
         ports:
           - 5432:5432
         options: >-
@@ -27,13 +27,10 @@ jobs:
 
     env:
       NODE_ENV: test
-      DATABASE_URL: postgresql://root:postgres@localhost:5432/internops_test
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/internops_test
       JWT_SECRET: ci-test-secret-do-not-use-in-prod
       PORT: 5000
       CORS_ORIGIN: http://localhost:5173
-      REDIS_URL: redis://localhost:6379
-      GOOGLE_CLIENT_ID: test-google-client-id
-      EMAIL_API_KEY: test-email-api-key
 
     steps:
       - name: Checkout code
@@ -49,24 +46,21 @@ jobs:
       - name: Install backend dependencies
         run: cd backend && npm ci
 
-      # ✅ Force-creates the internops_test target database if the application configuration expects it specifically
-      - name: Create fallback testing database
-        run: PGPASSWORD=postgres psql -h localhost -U root -d root -c "CREATE DATABASE internops_test;"
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
 
       - name: Run migrations
         run: cd backend && npm run migrate
-        env:
-          PGHOST: localhost
 
       - name: Seed test data
         run: cd backend && npm run seed
-        env:
-          PGHOST: localhost
 
       - name: Run Jest tests
         run: cd backend && npm test -- --forceExit --detectOpenHandles --runInBand
-        env:
-          PGHOST: localhost
 
       - name: Install frontend dependencies
         run: cd frontend && npm ci
