@@ -19,40 +19,39 @@ describe('Email Service', () => {
   });
 
   // ---------- Basic Send ----------
-describe('send()', () => {
-it('should send with console fallback when SMTP not configured', async () => {
-  const originalHost = process.env.SMTP_HOST;
-  const originalUser = process.env.SMTP_USER;
-  const originalPass = process.env.SMTP_PASS;
+  describe('send()', () => {
+    it('should send with console fallback when SMTP not configured', async () => {
+      const originalHost = process.env.SMTP_HOST;
+      const originalUser = process.env.SMTP_USER;
+      const originalPass = process.env.SMTP_PASS;
 
-  jest.doMock('nodemailer', () => ({
-    createTransport: jest.fn(),
-  }));
+      jest.doMock('nodemailer', () => ({
+        createTransport: jest.fn(),
+      }));
 
-  process.env.SMTP_HOST = '';
-  process.env.SMTP_USER = '';
-  process.env.SMTP_PASS = '';
+      process.env.SMTP_HOST = '';
+      process.env.SMTP_USER = '';
+      process.env.SMTP_PASS = '';
 
-  const freshEmailService = require('../../src/services/email');
+      const freshEmailService = require('../../src/services/email');
 
-  const result = await freshEmailService.send({
-    to: 'test@example.com',
-    subject: 'Test Subject',
-    text: 'Test body',
-  });
+      const result = await freshEmailService.send({
+        to: 'test@example.com',
+        subject: 'Test Subject',
+        text: 'Test body',
+      });
 
-  expect(result).toBeDefined();
-  expect(result.messageId).toMatch(/^console-/);
-  expect(result.accepted).toContain('test@example.com');
+      expect(result).toBeDefined();
+      expect(result.messageId).toMatch(/^console-/);
+      expect(result.accepted).toContain('test@example.com');
 
-  process.env.SMTP_HOST = originalHost;
-  process.env.SMTP_USER = originalUser;
-  process.env.SMTP_PASS = originalPass;
+      process.env.SMTP_HOST = originalHost;
+      process.env.SMTP_USER = originalUser;
+      process.env.SMTP_PASS = originalPass;
 
-  jest.resetModules();
-  jest.restoreAllMocks();
-});
-
+      jest.resetModules();
+      jest.restoreAllMocks();
+    });
 
     it('should reject missing required fields', async () => {
       await expect(
