@@ -88,19 +88,12 @@ export default function Reports() {
   });
 
   const attendanceData =
-  attendanceQuery.data?.length > 0
-    ? attendanceQuery.data
-    : MOCK_ATTENDANCE;
+    attendanceQuery.data?.length > 0 ? attendanceQuery.data : MOCK_ATTENDANCE;
 
-const ratingsData =
-  ratingsQuery.data?.length > 0
-    ? ratingsQuery.data
-    : MOCK_RATINGS;
+  const ratingsData =
+    ratingsQuery.data?.length > 0 ? ratingsQuery.data : MOCK_RATINGS;
 
-const tasksData =
-  tasksQuery.data?.length > 0
-    ? tasksQuery.data
-    : MOCK_TASKS;
+  const tasksData = tasksQuery.data?.length > 0 ? tasksQuery.data : MOCK_TASKS;
 
   return (
     <div>
