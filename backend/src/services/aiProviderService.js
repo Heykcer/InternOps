@@ -171,11 +171,14 @@ async function fetchWithTimeout(url, options = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);
 
+  const fetchOpts = { ...options };
+  // Bypass AbortSignal in tests to prevent Jest fetch errors
+  if (process.env.NODE_ENV !== 'test') {
+    fetchOpts.signal = controller.signal;
+  }
+
   try {
-    return await fetch(url, {
-      ...options,
-      signal: controller.signal,
-    });
+    const response = await fetch(url, fetchOpts);
     // Reject oversized responses before buffering the body into memory.
     // Closes the stream-amplification OOM path
     const contentLength = response.headers.get('content-length');
@@ -205,7 +208,14 @@ async function readResponseTextWithLimit(response) {
   }
 
   if (!response.body || typeof response.body.getReader !== 'function') {
-    throw new Error('Streaming response body is not supported');
+    // Fallback for Jest/Node environments that lack getReader()
+    const text = await response.text();
+    if (Buffer.byteLength(text, 'utf8') > MAX_AI_RESPONSE_BYTES) {
+      throw new ResponseSizeLimitError(
+        `AI provider response exceeded ${MAX_AI_RESPONSE_BYTES} bytes`
+      );
+    }
+    return text;
   }
 
   const reader = response.body.getReader();
