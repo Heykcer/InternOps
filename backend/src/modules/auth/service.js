@@ -85,9 +85,11 @@ async function refreshTokens(token, ip) {
   }
 
   const hash = hashToken(token);
-  const isValid = await repo.validateRefreshToken(hash);
 
-  if (!isValid) {
+  // Atomic claim — if two concurrent requests race, only one gets a userId back.
+  // The second gets null and is rejected immediately, eliminating the TOCTOU window.
+  const claimedUserId = await repo.claimRefreshToken(hash);
+  if (!claimedUserId) {
     throw new UnauthorizedError('Token revoked/expired');
   }
 
@@ -102,7 +104,6 @@ async function refreshTokens(token, ip) {
   const newExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
   await repo.storeRefreshTokenRedis(user.id, hashToken(newRefresh), newExpiry);
-  await repo.revokeRefreshTokenRedis(hash);
 
   return {
     accessToken: newAccess,

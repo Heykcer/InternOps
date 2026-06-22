@@ -1,4 +1,5 @@
 const auth = require('../../middleware/auth');
+const rbac = require('../../middleware/rbac');
 const {
   generateAIResponse,
   getProviderHealth,
@@ -10,7 +11,7 @@ async function routes(fastify) {
   fastify.post(
     '/chat',
     {
-      preHandler: [auth],
+      preHandler: [auth, rbac('ADMIN', 'SENIOR_TL', 'TL', 'CAPTAIN')],
       config: {
         rateLimit: {
           max: AI_CHAT_RATE_LIMIT,
@@ -45,6 +46,12 @@ async function routes(fastify) {
           content: result.content,
         };
       } catch (error) {
+        if (error.statusCode === 413) {
+          return reply.status(413).send({
+            error: 'AI provider response too large',
+          });
+        }
+
         return reply.status(503).send({
           error: 'AI service unavailable',
           details: error.details || [],
@@ -53,11 +60,18 @@ async function routes(fastify) {
     }
   );
 
-  fastify.get('/health', { preHandler: [auth] }, async () => {
-    return {
-      providers: getProviderHealth(),
-    };
-  });
+   fastify.get(
+    '/health',
+    {
+      preHandler: [auth, rbac('ADMIN')],
+    },
+    async () => {
+      return {
+        providers: getProviderHealth(),
+      };
+    }
+  );
+}
 }
 
 module.exports = routes;
