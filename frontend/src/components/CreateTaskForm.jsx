@@ -110,23 +110,38 @@ export default function CreateTaskForm() {
           value={form.taskLink}
           onChange={(e) => setForm({ ...form, taskLink: e.target.value })}
         />
-        
+
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-gray-700">Assign to Interns (Optional)</label>
+          <label className="text-sm font-semibold text-gray-700">
+            Assign to Interns (Optional)
+          </label>
           <div className="max-h-40 overflow-y-auto border rounded p-2 bg-white space-y-1">
             {interns.length === 0 ? (
-              <p className="text-xs text-gray-500">No interns found in your team.</p>
+              <p className="text-xs text-gray-500">
+                No interns found in your team.
+              </p>
             ) : (
               interns.map((intern) => (
-                <label key={intern.id} className="flex items-center gap-2 text-sm cursor-pointer">
+                <label
+                  key={intern.id}
+                  className="flex items-center gap-2 text-sm cursor-pointer"
+                >
                   <input
                     type="checkbox"
                     checked={form.userIds.includes(intern.id)}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setForm({ ...form, userIds: [...form.userIds, intern.id] });
+                        setForm({
+                          ...form,
+                          userIds: [...form.userIds, intern.id],
+                        });
                       } else {
-                        setForm({ ...form, userIds: form.userIds.filter((id) => id !== intern.id) });
+                        setForm({
+                          ...form,
+                          userIds: form.userIds.filter(
+                            (id) => id !== intern.id
+                          ),
+                        });
                       }
                     }}
                     className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500"

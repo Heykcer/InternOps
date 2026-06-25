@@ -90,7 +90,7 @@ module.exports = async function socialTasksRoutes(fastify) {
       if (userIds.length > 0) {
         await repo.assignTask(req.params.id, userIds);
       }
-      
+
       req.auditOnResponse = {
         userId: req.user.id,
         action: 'TASK_ASSIGNED',
