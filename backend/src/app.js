@@ -254,7 +254,10 @@ app.setErrorHandler((error, request, reply) => {
 
   // Preserve messages for explicit HTTP errors, otherwise hide internal details
   const statusCode = error.statusCode || 500;
-  const message = statusCode < 500 ? error.message : 'An unexpected error occurred. Please try again later.';
+  const message =
+    statusCode < 500
+      ? error.message
+      : 'An unexpected error occurred. Please try again later.';
 
   return reply.status(statusCode).send({
     error: message,
