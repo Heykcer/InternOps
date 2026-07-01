@@ -1,3 +1,4 @@
+const { sanitizationMiddleware: sanitize } = require('../../middleware/sanitize');
 ﻿const auth = require('../../middleware/auth');
 const rbac = require('../../middleware/rbac');
 const ownership = require('../../middleware/ownership');
@@ -121,7 +122,7 @@ async function routes(fastify) {
   fastify.patch(
     '/:id/suspend',
     {
-      preHandler: [auth, rbac('ADMIN')],
+      preHandler: [auth, rbac('ADMIN'), sanitize],
       schema: {
         tags: ['Users'],
         description: 'Suspend user (Admin only)',
@@ -163,7 +164,7 @@ async function routes(fastify) {
   fastify.patch(
     '/:id/activate',
     {
-      preHandler: [auth, rbac('ADMIN')],
+      preHandler: [auth, rbac('ADMIN'), sanitize],
       schema: {
         tags: ['Users'],
         description: 'Activate user (Admin only)',
@@ -208,7 +209,7 @@ async function routes(fastify) {
   fastify.patch(
     '/me/password',
     {
-      preHandler: [auth],
+      preHandler: [auth, sanitize],
       schema: {
         tags: ['Users'],
         description: 'Change own password',
@@ -254,7 +255,7 @@ async function routes(fastify) {
   fastify.patch(
     '/me',
     {
-      preHandler: [auth],
+      preHandler: [auth, sanitize],
       schema: {
         tags: ['Users'],
         description: 'Update own profile',

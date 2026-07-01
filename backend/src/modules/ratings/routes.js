@@ -1,3 +1,4 @@
+const { sanitizationMiddleware: sanitize } = require('../../middleware/sanitize');
 const { notifyUser } = require('../../websocket');
 ('use strict');
 const auth = require('../../middleware/auth');
@@ -17,7 +18,7 @@ module.exports = async function ratingsRoutes(fastify) {
     '/',
     {
       schema: { tags: ['Ratings'], description: 'Submit a rating' },
-      preHandler: [auth, rbac('ADMIN', 'SENIOR_TL', 'TL', 'CAPTAIN')],
+      preHandler: [auth, rbac('ADMIN', 'SENIOR_TL', 'TL', 'CAPTAIN'), sanitize],
     },
     async (req, reply) => {
       const { rated_user_id, score, remarks } = z

@@ -1,3 +1,4 @@
+const { sanitizationMiddleware: sanitize } = require('../../middleware/sanitize');
 const auth = require('../../middleware/auth');
 const rbac = require('../../middleware/rbac');
 const repo = require('./repository');
@@ -52,7 +53,7 @@ async function routes(fastify) {
     '/me/revoke-all',
     {
       schema: { tags: ['Sessions'], description: 'Revoke all other sessions' },
-      preHandler: [auth],
+      preHandler: [auth, sanitize],
     },
     async (req, reply) => {
       await repo.revokeAllUserSessions(req.user.id);
@@ -76,7 +77,7 @@ async function routes(fastify) {
         description: 'Admin: revoke all sessions of a user',
         params: toSchema(z.object({ userId: z.string() })),
       },
-      preHandler: [auth, rbac('ADMIN')],
+      preHandler: [auth, rbac('ADMIN'), sanitize],
     },
     async (req, reply) => {
       const { userId } = req.params;

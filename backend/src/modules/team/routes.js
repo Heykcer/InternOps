@@ -1,3 +1,4 @@
+const { sanitizationMiddleware: sanitize } = require('../../middleware/sanitize');
 const auth = require('../../middleware/auth');
 const rbac = require('../../middleware/rbac');
 const ownership = require('../../middleware/ownership');
@@ -116,7 +117,7 @@ async function routes(fastify) {
   fastify.post(
     '/members',
     {
-      preHandler: [auth, rbac(...MANAGER_ROLES)],
+      preHandler: [auth, rbac(...MANAGER_ROLES), sanitize],
       schema: {
         tags: ['Team'],
         description: 'Create new team member',
@@ -234,7 +235,7 @@ async function routes(fastify) {
   fastify.patch(
     '/members/:id',
     {
-      preHandler: [auth, rbac(...MANAGER_ROLES), ownership('id')],
+      preHandler: [auth, rbac(...MANAGER_ROLES), ownership('id'), sanitize],
       schema: {
         tags: ['Team'],
         description: 'Update team member details',
@@ -263,7 +264,7 @@ async function routes(fastify) {
   fastify.patch(
     '/members/:id/status',
     {
-      preHandler: [auth, rbac(...MANAGER_ROLES), ownership('id')],
+      preHandler: [auth, rbac(...MANAGER_ROLES), ownership('id'), sanitize],
       schema: {
         tags: ['Team'],
         description: 'Toggle member suspension',
@@ -292,7 +293,7 @@ async function routes(fastify) {
   fastify.patch(
     '/members/:id/role',
     {
-      preHandler: [auth, rbac(...MANAGER_ROLES), ownership('id')],
+      preHandler: [auth, rbac(...MANAGER_ROLES), ownership('id'), sanitize],
       schema: {
         tags: ['Team'],
         description: 'Change member role',
@@ -366,7 +367,7 @@ async function routes(fastify) {
   fastify.patch(
     '/members/:id/manager',
     {
-      preHandler: [auth, rbac(...MANAGER_ROLES), ownership('id')],
+      preHandler: [auth, rbac(...MANAGER_ROLES), ownership('id'), sanitize],
       schema: {
         tags: ['Team'],
         description: 'Change member manager',
