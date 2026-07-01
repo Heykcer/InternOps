@@ -1,5 +1,7 @@
-const { sanitizationMiddleware: sanitize } = require('../../middleware/sanitize');
-﻿const auth = require('../../middleware/auth');
+const {
+  sanitizationMiddleware: sanitize,
+} = require('../../middleware/sanitize');
+const auth = require('../../middleware/auth');
 const repo = require('./repository');
 const { z } = require('zod');
 const { toSchema } = require('../../utils/schemaHelper');

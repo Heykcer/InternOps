@@ -1,4 +1,6 @@
-const { sanitizationMiddleware: sanitize } = require('../../middleware/sanitize');
+const {
+  sanitizationMiddleware: sanitize,
+} = require('../../middleware/sanitize');
 const pool = require('../../config/db');
 const { notifyUser } = require('../../websocket');
 const auth = require('../../middleware/auth');

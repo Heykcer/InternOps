@@ -1,5 +1,7 @@
-const { sanitizationMiddleware: sanitize } = require('../../middleware/sanitize');
-'use strict';
+const {
+  sanitizationMiddleware: sanitize,
+} = require('../../middleware/sanitize');
+('use strict');
 const auth = require('../../middleware/auth');
 const rbac = require('../../middleware/rbac');
 const repo = require('./repository');

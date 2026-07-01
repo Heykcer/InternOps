@@ -1,4 +1,6 @@
-const { sanitizationMiddleware: sanitize } = require('../../middleware/sanitize');
+const {
+  sanitizationMiddleware: sanitize,
+} = require('../../middleware/sanitize');
 const service = require('./service');
 const { z } = require('zod');
 const rbac = require('../../middleware/rbac');
