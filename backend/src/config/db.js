@@ -7,8 +7,6 @@ const pool = new Pool({
   idleTimeoutMillis: 30000,
 });
 
-
-
 pool.on('error', (err) => {
   console.error('DB pool error:', err);
 });
