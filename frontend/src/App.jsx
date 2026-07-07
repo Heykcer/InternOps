@@ -21,6 +21,11 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import Departments from './pages/admin/Departments';
 import AuditLog from './pages/admin/AuditLog';
 import Notices from './pages/admin/Notices';
+import Certificates from './pages/admin/Certificates';
+import BulkGenerate from './pages/admin/BulkGenerate';
+import CanvaTemplates from './pages/admin/CanvaTemplates';
+import AICertificates from './pages/admin/AICertificates';
+import QuickGenerate from './pages/admin/QuickGenerate';
 import useAuthStore from './store/auth';
 import api from './lib/axios';
 import RoleGuard from './components/RoleGuard';
@@ -185,6 +190,48 @@ export default function App() {
             element={
               <RoleGuard allowedRoles={['ADMIN']}>
                 <AuditLog />
+              </RoleGuard>
+            }
+          />
+
+          {/* Certificate & Canva Routes (Admin only) */}
+          <Route
+            path="quick-generate"
+            element={
+              <RoleGuard allowedRoles={['ADMIN']}>
+                <QuickGenerate />
+              </RoleGuard>
+            }
+          />
+          <Route
+            path="certificates"
+            element={
+              <RoleGuard allowedRoles={['ADMIN']}>
+                <Certificates />
+              </RoleGuard>
+            }
+          />
+          <Route
+            path="bulk-generate"
+            element={
+              <RoleGuard allowedRoles={['ADMIN']}>
+                <BulkGenerate />
+              </RoleGuard>
+            }
+          />
+          <Route
+            path="canva-templates"
+            element={
+              <RoleGuard allowedRoles={['ADMIN']}>
+                <CanvaTemplates />
+              </RoleGuard>
+            }
+          />
+          <Route
+            path="ai-certificates"
+            element={
+              <RoleGuard allowedRoles={['ADMIN']}>
+                <AICertificates />
               </RoleGuard>
             }
           />
