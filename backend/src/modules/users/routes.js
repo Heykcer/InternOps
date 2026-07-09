@@ -38,10 +38,19 @@ const updateProfileSchema = z.object({
   location: z.string().optional(),
   notes: z.string().optional(),
   avatar_url: z
-    .union([
-      z.string().url().startsWith('https://'),
-      z.string().startsWith('/uploads/')
-    ])
+    .string()
+    .refine(
+      (val) => {
+        if (val.startsWith('/uploads/')) return true;
+        try {
+          const url = new URL(val);
+          return url.protocol === 'https:';
+        } catch {
+          return false;
+        }
+      },
+      { message: 'Must be a valid HTTPS URL or an internal upload path' }
+    )
     .optional(),
 });
 
@@ -311,10 +320,19 @@ async function routes(fastify) {
         location: z.string().optional(),
         notes: z.string().optional(),
         avatar_url: z
-          .union([
-            z.string().url().startsWith('https://'),
-            z.string().startsWith('/uploads/')
-          ])
+          .string()
+          .refine(
+            (val) => {
+              if (val.startsWith('/uploads/')) return true;
+              try {
+                const url = new URL(val);
+                return url.protocol === 'https:';
+              } catch {
+                return false;
+              }
+            },
+            { message: 'Must be a valid HTTPS URL or an internal upload path' }
+          )
           .optional(),
       });
 
