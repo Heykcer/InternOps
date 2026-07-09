@@ -37,7 +37,12 @@ const updateProfileSchema = z.object({
   internship_status: z.string().optional(),
   location: z.string().optional(),
   notes: z.string().optional(),
-  avatar_url: z.string().optional(),
+  avatar_url: z
+    .union([
+      z.string().url().startsWith('https://'),
+      z.string().startsWith('/uploads/')
+    ])
+    .optional(),
 });
 
 async function routes(fastify) {
@@ -305,7 +310,12 @@ async function routes(fastify) {
         internship_status: z.string().optional(),
         location: z.string().optional(),
         notes: z.string().optional(),
-        avatar_url: z.string().optional(),
+        avatar_url: z
+          .union([
+            z.string().url().startsWith('https://'),
+            z.string().startsWith('/uploads/')
+          ])
+          .optional(),
       });
 
       const data = schema.parse(req.body);
