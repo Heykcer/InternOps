@@ -31,8 +31,8 @@ export default function ResetPassword() {
     onError: (err) => setError(err.response?.data?.error || 'Reset failed'),
   });
 
- const handleSubmit = (e) => {
-  e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
     if (resetMut.isPending) return;
 
@@ -41,15 +41,14 @@ export default function ResetPassword() {
       return;
     }
 
+    setError('');
+    setMessage('');
 
-  setError('');
-  setMessage('');
-
-  resetMut.mutate({
-    token,
-    newPassword,
-  });
-};
+    resetMut.mutate({
+      token,
+      newPassword,
+    });
+  };
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-animated-gradient bg-gradient-to-br from-slate-950 via-indigo-950 to-blue-950 animate-gradient-shift p-4">
       <div className="absolute -top-24 -left-24 w-96 h-96 bg-indigo-400/20 rounded-full blur-3xl animate-float-slow" />

@@ -94,12 +94,12 @@ export default function Login() {
       return setError('Email and password required');
 
     setError('');
-   
+
     loginMut.mutate({
-        email,
-        password,
+      email,
+      password,
     });
-};
+  };
 
   return (
     <div className="relative h-screen w-full overflow-hidden flex flex-col lg:flex-row bg-gradient-to-br from-slate-950 via-indigo-950 to-blue-950 text-white">
