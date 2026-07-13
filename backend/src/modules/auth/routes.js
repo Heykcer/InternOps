@@ -221,7 +221,7 @@ async function routes(fastify) {
         httpOnly: true,
         secure: isProduction,
         sameSite: isProduction ? 'strict' : 'lax',
-        path: '/api/auth/refresh',
+        path: '/api/v1/auth/refresh',
       });
 
       rotateAndSetCsrf(req, reply, result.user.id);
@@ -269,7 +269,7 @@ async function routes(fastify) {
         httpOnly: true,
         secure: isProduction,
         sameSite: isProduction ? 'strict' : 'lax',
-        path: '/api/auth/refresh',
+        path: '/api/v1/auth/refresh',
       });
 
       return {
@@ -311,7 +311,7 @@ async function routes(fastify) {
         req.headers['user-agent']
       );
 
-      reply.clearCookie('refreshToken', { path: '/api/auth/refresh' });
+      reply.clearCookie('refreshToken', { path: '/api/v1/auth/refresh' });
 
       rotateAndSetCsrf(req, reply, null);
       return { message: 'Logged out' };
