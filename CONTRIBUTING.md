@@ -424,11 +424,11 @@ Infrastructure endpoints (`/health`, `/metrics`, `/docs`) are **not** versioned.
 
 ### Rules for contributors
 
-| Scenario | Action |
-| -------- | ------ |
-| New optional field, new endpoint | Add to current `/v1/` — no new version needed |
-| Rename a field / change a type / remove a field | Introduce `/api/v2/` alongside `/v1/`; deprecate `/v1/` |
-| Removing a version | Minimum **90-day** sunset window after `Deprecation` + `Sunset` headers are added |
+| Scenario                                        | Action                                                                            |
+| ----------------------------------------------- | --------------------------------------------------------------------------------- |
+| New optional field, new endpoint                | Add to current `/v1/` — no new version needed                                     |
+| Rename a field / change a type / remove a field | Introduce `/api/v2/` alongside `/v1/`; deprecate `/v1/`                           |
+| Removing a version                              | Minimum **90-day** sunset window after `Deprecation` + `Sunset` headers are added |
 
 ### Deprecation headers
 
@@ -449,7 +449,7 @@ When a breaking change is needed:
 1. Create `src/routes.v2.js` that registers only the changed modules.
 2. Register it in `app.js`:
    ```js
-   app.register(require('./routes'),    { prefix: '/api/v1' });
+   app.register(require('./routes'), { prefix: '/api/v1' });
    app.register(require('./routes.v2'), { prefix: '/api/v2' });
    ```
 3. Add `Deprecation` / `Sunset` headers to all `/v1/` responses.

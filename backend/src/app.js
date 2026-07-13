@@ -172,7 +172,11 @@ if (process.env.NODE_ENV !== 'test') {
       },
       servers: [
         { url: '/api/v1', description: 'Current stable API (v1)' },
-        { url: '/api/v2', description: 'Next API version (v2) — see CONTRIBUTING.md for migration guide' },
+        {
+          url: '/api/v2',
+          description:
+            'Next API version (v2) — see CONTRIBUTING.md for migration guide',
+        },
       ],
     },
   });

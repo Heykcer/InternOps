@@ -315,9 +315,13 @@ describe('Meetings Integration Tests', () => {
       const userRes = await pool.query('SELECT id FROM users LIMIT 1');
       const userId = userRes.rows[0].id;
 
-      const res = await inject('POST', `/api/v1/meetings/${meetingId}/attendees`, {
-        payload: { userId },
-      });
+      const res = await inject(
+        'POST',
+        `/api/v1/meetings/${meetingId}/attendees`,
+        {
+          payload: { userId },
+        }
+      );
       expect(res.statusCode).toBe(200);
       expect(JSON.parse(res.body).message).toBe('Attendee added');
 

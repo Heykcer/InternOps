@@ -210,9 +210,13 @@ afterAll(async () => {
 describe('PATCH /api/users/:id/suspend — Issue #468', () => {
   // ── Test 1 ────────────────────────────────────────────────────────────────
   it('should return 400 when an admin tries to suspend themselves', async () => {
-    const res = await inject('PATCH', `/api/v1/users/${seededAdminId}/suspend`, {
-      payload: {},
-    });
+    const res = await inject(
+      'PATCH',
+      `/api/v1/users/${seededAdminId}/suspend`,
+      {
+        payload: {},
+      }
+    );
 
     expect(res.statusCode).toBe(400);
     const body = JSON.parse(res.body);
@@ -231,9 +235,13 @@ describe('PATCH /api/users/:id/suspend — Issue #468', () => {
     // Attempting to suspend them from the seeded admin's token must be blocked.
     // (The seeded admin's JWT is still valid even though they are now suspended
     // because the route only checks RBAC role, not the suspended flag.)
-    const res = await inject('PATCH', `/api/v1/users/${secondAdminId}/suspend`, {
-      payload: {},
-    });
+    const res = await inject(
+      'PATCH',
+      `/api/v1/users/${secondAdminId}/suspend`,
+      {
+        payload: {},
+      }
+    );
 
     expect(res.statusCode).toBe(400);
     const body = JSON.parse(res.body);
@@ -248,9 +256,13 @@ describe('PATCH /api/users/:id/suspend — Issue #468', () => {
   // ── Test 3 ────────────────────────────────────────────────────────────────
   it('should return 200 when suspending an admin while multiple active admins exist', async () => {
     // Both admins are currently active
-    const res = await inject('PATCH', `/api/v1/users/${secondAdminId}/suspend`, {
-      payload: {},
-    });
+    const res = await inject(
+      'PATCH',
+      `/api/v1/users/${secondAdminId}/suspend`,
+      {
+        payload: {},
+      }
+    );
 
     expect(res.statusCode).toBe(200);
     const body = JSON.parse(res.body);
