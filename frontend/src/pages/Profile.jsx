@@ -56,6 +56,8 @@ export default function Profile() {
     data: profile,
     isLoading,
     isError,
+    error: profileError,
+    refetch,
   } = useQuery({
     queryKey: ['myProfile'],
     queryFn: () => api.get('/users/me').then((res) => res.data),
