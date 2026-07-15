@@ -8,7 +8,9 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD || 'postgres',
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 5432,
-  database: process.env.DB_NAME || (process.env.NODE_ENV === 'test' ? 'internops_test' : 'internops'),
+  database:
+    process.env.DB_NAME ||
+    (process.env.NODE_ENV === 'test' ? 'internops_test' : 'internops'),
   max: config.dbPoolMax || 20,
   idleTimeoutMillis: 30000,
 });
