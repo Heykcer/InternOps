@@ -104,7 +104,11 @@ async function isEnabled(flagKey, user = null) {
   if (!flag.enabled) return false;
 
   // 2. Role allowlist — if defined, user must have one of the allowed roles
-  if (flag.allowedRoles && Array.isArray(flag.allowedRoles) && flag.allowedRoles.length > 0) {
+  if (
+    flag.allowedRoles &&
+    Array.isArray(flag.allowedRoles) &&
+    flag.allowedRoles.length > 0
+  ) {
     if (!user?.role || !flag.allowedRoles.includes(user.role)) return false;
   }
 
@@ -166,4 +170,10 @@ function invalidateAll() {
   cache.clear();
 }
 
-module.exports = { isEnabled, getAllForUser, getAllDefinitions, invalidate, invalidateAll };
+module.exports = {
+  isEnabled,
+  getAllForUser,
+  getAllDefinitions,
+  invalidate,
+  invalidateAll,
+};

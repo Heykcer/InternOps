@@ -50,9 +50,9 @@ module.exports = {
   // ... existing flags ...
 
   MY_NEW_FEATURE: {
-    defaultEnabled: false,         // off until explicitly enabled
+    defaultEnabled: false, // off until explicitly enabled
     description: 'Description of what this flag controls',
-    rolloutPct: 100,               // default: all users
+    rolloutPct: 100, // default: all users
   },
 };
 ```
@@ -71,6 +71,7 @@ ON CONFLICT (key) DO NOTHING;
 ```
 
 Run it:
+
 ```bash
 cd backend
 npm run migrate
@@ -102,12 +103,16 @@ when the flag is off (the feature simply "doesn't exist" for that user).
 const featureFlagMiddleware = require('../../middleware/featureFlag');
 const authenticate = require('../../middleware/auth');
 
-fastify.get('/my-route', {
-  preHandler: [authenticate, featureFlagMiddleware('MY_NEW_FEATURE')],
-}, async (req, reply) => {
-  // Only reached when MY_NEW_FEATURE is ON for req.user
-  reply.send({ data: '...' });
-});
+fastify.get(
+  '/my-route',
+  {
+    preHandler: [authenticate, featureFlagMiddleware('MY_NEW_FEATURE')],
+  },
+  async (req, reply) => {
+    // Only reached when MY_NEW_FEATURE is ON for req.user
+    reply.send({ data: '...' });
+  }
+);
 ```
 
 ---
@@ -158,6 +163,7 @@ const isEnabled = useFeatureFlagsStore.getState().isEnabled('MY_NEW_FEATURE');
 Navigate to `/feature-flags` (ADMIN role required).
 
 The page provides:
+
 - **Stats bar** — total / enabled / disabled count
 - **Flag cards** — one per flag, showing status, rollout %, role restrictions
 - **Edit modal** — toggle enabled, set rollout %, pick allowed roles, update description
@@ -171,14 +177,14 @@ The page provides:
 
 Base path: `/api/v1/feature-flags`
 
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| `GET` | `/` | Any authenticated | Boolean map of all flags for the calling user |
-| `GET` | `/definitions` | ADMIN | Full DB rows with metadata (used by Admin UI) |
-| `GET` | `/:key` | Any authenticated | Single flag evaluation for calling user |
-| `PUT` | `/:key` | ADMIN | Update flag (partial, merges with existing) |
-| `POST` | `/:key/disable` | ADMIN | Kill-switch — instantly disables |
-| `POST` | `/:key/enable` | ADMIN | Re-enable a disabled flag |
+| Method | Path            | Auth              | Description                                   |
+| ------ | --------------- | ----------------- | --------------------------------------------- |
+| `GET`  | `/`             | Any authenticated | Boolean map of all flags for the calling user |
+| `GET`  | `/definitions`  | ADMIN             | Full DB rows with metadata (used by Admin UI) |
+| `GET`  | `/:key`         | Any authenticated | Single flag evaluation for calling user       |
+| `PUT`  | `/:key`         | ADMIN             | Update flag (partial, merges with existing)   |
+| `POST` | `/:key/disable` | ADMIN             | Kill-switch — instantly disables              |
+| `POST` | `/:key/enable`  | ADMIN             | Re-enable a disabled flag                     |
 
 ### `PUT /:key` body schema
 
@@ -202,6 +208,7 @@ When a feature is causing incidents:
 1. **Via Admin UI** — go to `/feature-flags`, find the flag, click the red **Kill** button. Done.
 
 2. **Via API** (e.g., from a terminal / incident runbook):
+
    ```bash
    curl -X POST https://your-api/api/v1/feature-flags/MY_NEW_FEATURE/disable \
      -H "Authorization: Bearer <admin_token>" \
@@ -233,6 +240,7 @@ A SHA-256 hash of `userId + flagKey` is computed, producing a deterministic
 - Anonymous (unauthenticated) users are excluded from percentage rollouts.
 
 **Example: staged rollout to 10% then 50% then 100%:**
+
 ```bash
 # 10% of users
 curl -X PUT .../feature-flags/MY_NEW_FEATURE -d '{"rolloutPct": 10}'
@@ -251,12 +259,14 @@ curl -X PUT .../feature-flags/MY_NEW_FEATURE -d '{"rolloutPct": 100}'
 `allowed_roles` is a JSON array of role strings, or `null` (meaning all roles).
 
 **Example: internal beta for ADMIN and SENIOR_TL only:**
+
 ```bash
 curl -X PUT .../feature-flags/MY_NEW_FEATURE \
   -d '{"enabled": true, "allowedRoles": ["ADMIN", "SENIOR_TL"]}'
 ```
 
 **Remove restriction (allow all roles):**
+
 ```bash
 curl -X PUT .../feature-flags/MY_NEW_FEATURE -d '{"allowedRoles": null}'
 ```

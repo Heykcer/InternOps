@@ -35,7 +35,8 @@ const useFeatureFlagsStore = create((set, get) => ({
     } catch (err) {
       // On failure, keep any previously loaded flags and mark as loaded
       // so the app doesn't block on a flag fetch error.
-      const message = err?.response?.data?.error ?? 'Failed to load feature flags';
+      const message =
+        err?.response?.data?.error ?? 'Failed to load feature flags';
       console.warn('[FeatureFlags] Fetch failed:', message);
       set((prev) => ({ loaded: true, error: message, flags: prev.flags }));
     }

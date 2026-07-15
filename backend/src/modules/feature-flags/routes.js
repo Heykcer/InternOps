@@ -27,14 +27,10 @@ module.exports = async function featureFlagsRoutes(fastify) {
    * Returns all flags evaluated for the calling user (boolean map).
    * Used by the frontend on boot.
    */
-  fastify.get(
-    '/',
-    { preHandler: [authenticate] },
-    async (req, reply) => {
-      const flagMap = await service.getAllForUser(req.user);
-      return reply.send({ flags: flagMap });
-    }
-  );
+  fastify.get('/', { preHandler: [authenticate] }, async (req, reply) => {
+    const flagMap = await service.getAllForUser(req.user);
+    return reply.send({ flags: flagMap });
+  });
 
   /**
    * GET /feature-flags/definitions
@@ -54,20 +50,16 @@ module.exports = async function featureFlagsRoutes(fastify) {
    * GET /feature-flags/:key
    * Returns the evaluated boolean for a single flag for the calling user.
    */
-  fastify.get(
-    '/:key',
-    { preHandler: [authenticate] },
-    async (req, reply) => {
-      const { key } = req.params;
+  fastify.get('/:key', { preHandler: [authenticate] }, async (req, reply) => {
+    const { key } = req.params;
 
-      if (!FLAGS[key]) {
-        return reply.status(404).send({ error: `Unknown flag: ${key}` });
-      }
-
-      const enabled = await service.isEnabled(key, req.user);
-      return reply.send({ key, enabled });
+    if (!FLAGS[key]) {
+      return reply.status(404).send({ error: `Unknown flag: ${key}` });
     }
-  );
+
+    const enabled = await service.isEnabled(key, req.user);
+    return reply.send({ key, enabled });
+  });
 
   /**
    * PUT /feature-flags/:key
@@ -101,9 +93,14 @@ module.exports = async function featureFlagsRoutes(fastify) {
       const updated = await repository.upsert({
         key,
         enabled: enabled ?? current?.enabled ?? staticDef.defaultEnabled,
-        rolloutPct: rolloutPct ?? current?.rollout_pct ?? staticDef.rolloutPct ?? 100,
-        allowedRoles: allowedRoles !== undefined ? allowedRoles : (current?.allowed_roles ?? null),
-        description: description ?? current?.description ?? staticDef.description,
+        rolloutPct:
+          rolloutPct ?? current?.rollout_pct ?? staticDef.rolloutPct ?? 100,
+        allowedRoles:
+          allowedRoles !== undefined
+            ? allowedRoles
+            : (current?.allowed_roles ?? null),
+        description:
+          description ?? current?.description ?? staticDef.description,
         updatedBy: req.user.id,
       });
 
@@ -132,7 +129,9 @@ module.exports = async function featureFlagsRoutes(fastify) {
       const updated = await repository.disable(key, req.user.id);
 
       if (!updated) {
-        return reply.status(404).send({ error: `Flag not found in database: ${key}` });
+        return reply
+          .status(404)
+          .send({ error: `Flag not found in database: ${key}` });
       }
 
       service.invalidate(key);

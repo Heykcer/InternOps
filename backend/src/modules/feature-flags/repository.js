@@ -41,7 +41,14 @@ async function findByKey(key) {
  * @param {string|null} flag.updatedBy  user UUID
  * @returns {Promise<object>}
  */
-async function upsert({ key, enabled, rolloutPct, allowedRoles, description, updatedBy }) {
+async function upsert({
+  key,
+  enabled,
+  rolloutPct,
+  allowedRoles,
+  description,
+  updatedBy,
+}) {
   const { rows } = await pool.query(
     `INSERT INTO feature_flags (key, enabled, rollout_pct, allowed_roles, description, updated_at, updated_by)
      VALUES ($1, $2, $3, $4, $5, NOW(), $6)

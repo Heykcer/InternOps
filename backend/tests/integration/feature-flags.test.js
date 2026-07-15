@@ -73,7 +73,10 @@ beforeAll(async () => {
   cookies = {};
 
   // 1. Get CSRF token
-  const csrfRes = await app.inject({ method: 'GET', url: '/api/v1/auth/csrf-token' });
+  const csrfRes = await app.inject({
+    method: 'GET',
+    url: '/api/v1/auth/csrf-token',
+  });
   const csrfBody = JSON.parse(csrfRes.body);
   csrfToken = csrfBody.csrfToken;
   updateCookieJar(csrfRes);
@@ -137,7 +140,10 @@ beforeEach(async () => {
 
 describe('FeatureFlag Service — isEnabled()', () => {
   it('returns false for an unknown flag key', async () => {
-    const result = await service.isEnabled('DOES_NOT_EXIST', { id: 'user-1', role: 'INTERN' });
+    const result = await service.isEnabled('DOES_NOT_EXIST', {
+      id: 'user-1',
+      role: 'INTERN',
+    });
     expect(result).toBe(false);
   });
 
@@ -193,8 +199,14 @@ describe('FeatureFlag Service — isEnabled()', () => {
     service.invalidateAll();
 
     const userId = 'static-user-id-123';
-    const r1 = await service.isEnabled('BULK_EXPORT_V2', { id: userId, role: 'INTERN' });
-    const r2 = await service.isEnabled('BULK_EXPORT_V2', { id: userId, role: 'INTERN' });
+    const r1 = await service.isEnabled('BULK_EXPORT_V2', {
+      id: userId,
+      role: 'INTERN',
+    });
+    const r2 = await service.isEnabled('BULK_EXPORT_V2', {
+      id: userId,
+      role: 'INTERN',
+    });
     expect(r1).toBe(r2); // same result every time for same user
 
     // Restore
@@ -219,7 +231,10 @@ describe('FeatureFlag Service — isEnabled()', () => {
 
 describe('GET /api/v1/feature-flags', () => {
   it('returns 401 without auth token', async () => {
-    const res = await app.inject({ method: 'GET', url: '/api/v1/feature-flags' });
+    const res = await app.inject({
+      method: 'GET',
+      url: '/api/v1/feature-flags',
+    });
     expect(res.statusCode).toBe(401);
   });
 
@@ -299,9 +314,13 @@ describe('PUT /api/v1/feature-flags/:key', () => {
   });
 
   it('updates a flag successfully as ADMIN', async () => {
-    const res = await inject('PUT', '/api/v1/feature-flags/ADVANCED_ANALYTICS', {
-      body: { enabled: true, rolloutPct: 100 },
-    });
+    const res = await inject(
+      'PUT',
+      '/api/v1/feature-flags/ADVANCED_ANALYTICS',
+      {
+        body: { enabled: true, rolloutPct: 100 },
+      }
+    );
     expect(res.statusCode).toBe(200);
     const body = JSON.parse(res.body);
     expect(body.flag.enabled).toBe(true);
@@ -314,9 +333,13 @@ describe('PUT /api/v1/feature-flags/:key', () => {
   });
 
   it('validates rolloutPct range (> 100 is rejected)', async () => {
-    const res = await inject('PUT', '/api/v1/feature-flags/ADVANCED_ANALYTICS', {
-      body: { rolloutPct: 999 },
-    });
+    const res = await inject(
+      'PUT',
+      '/api/v1/feature-flags/ADVANCED_ANALYTICS',
+      {
+        body: { rolloutPct: 999 },
+      }
+    );
     expect(res.statusCode).toBe(400);
   });
 
@@ -331,7 +354,10 @@ describe('PUT /api/v1/feature-flags/:key', () => {
 describe('POST /api/v1/feature-flags/:key/disable (kill-switch)', () => {
   it('immediately disables an enabled flag', async () => {
     // First verify CANVA_INTEGRATION is on
-    const beforeRes = await inject('GET', '/api/v1/feature-flags/CANVA_INTEGRATION');
+    const beforeRes = await inject(
+      'GET',
+      '/api/v1/feature-flags/CANVA_INTEGRATION'
+    );
     const before = JSON.parse(beforeRes.body);
     expect(before.enabled).toBe(true);
 
@@ -346,12 +372,17 @@ describe('POST /api/v1/feature-flags/:key/disable (kill-switch)', () => {
     expect(disableBody.flag.enabled).toBe(false);
 
     // Verify via GET (cache already invalidated by the route)
-    const afterRes = await inject('GET', '/api/v1/feature-flags/CANVA_INTEGRATION');
+    const afterRes = await inject(
+      'GET',
+      '/api/v1/feature-flags/CANVA_INTEGRATION'
+    );
     const after = JSON.parse(afterRes.body);
     expect(after.enabled).toBe(false);
 
     // Restore
-    await inject('POST', '/api/v1/feature-flags/CANVA_INTEGRATION/enable', { body: {} });
+    await inject('POST', '/api/v1/feature-flags/CANVA_INTEGRATION/enable', {
+      body: {},
+    });
     service.invalidateAll();
   });
 });
@@ -359,15 +390,21 @@ describe('POST /api/v1/feature-flags/:key/disable (kill-switch)', () => {
 describe('POST /api/v1/feature-flags/:key/enable', () => {
   it('re-enables a disabled flag', async () => {
     // Send body: {} so Fastify's JSON parser does not reject the empty body
-    const res = await inject('POST', '/api/v1/feature-flags/NEW_DASHBOARD_V2/enable', {
-      body: {},
-    });
+    const res = await inject(
+      'POST',
+      '/api/v1/feature-flags/NEW_DASHBOARD_V2/enable',
+      {
+        body: {},
+      }
+    );
     expect(res.statusCode).toBe(200);
     const body = JSON.parse(res.body);
     expect(body.flag.enabled).toBe(true);
 
     // Restore to disabled
-    await inject('POST', '/api/v1/feature-flags/NEW_DASHBOARD_V2/disable', { body: {} });
+    await inject('POST', '/api/v1/feature-flags/NEW_DASHBOARD_V2/disable', {
+      body: {},
+    });
     service.invalidateAll();
   });
 });

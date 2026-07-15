@@ -205,7 +205,9 @@ export default function DashboardLayout() {
   }, [dark]);
 
   const visibleNav = nav.filter((item) => canShowNavItem(item, role, flags));
-  const visibleAdminNav = adminNav.filter((item) => canShowNavItem(item, role, flags));
+  const visibleAdminNav = adminNav.filter((item) =>
+    canShowNavItem(item, role, flags)
+  );
 
   const allItems = [...visibleNav, ...visibleAdminNav];
 

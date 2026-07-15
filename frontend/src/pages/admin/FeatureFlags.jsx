@@ -22,9 +22,11 @@ import useFeatureFlagsStore from '../../store/featureFlags';
 // ─── Role badge colours ───────────────────────────────────────────────────────
 const ROLE_COLORS = {
   ADMIN: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300',
-  SENIOR_TL: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
+  SENIOR_TL:
+    'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
   TL: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300',
-  CAPTAIN: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+  CAPTAIN:
+    'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
   INTERN: 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300',
 };
 
@@ -462,7 +464,10 @@ export default function FeatureFlags() {
 
         <button
           id="refresh-flags"
-          onClick={() => { refetch(); refreshStore(); }}
+          onClick={() => {
+            refetch();
+            refreshStore();
+          }}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition"
         >
           <RefreshCw className="w-4 h-4" />
