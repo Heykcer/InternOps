@@ -129,13 +129,18 @@ class EmailService {
       }
     } catch (err) {
       if (err.message.startsWith('Rate limit exceeded')) throw err;
-      log.warn({ err: err.message }, 'Redis rate-limit check failed; falling back to in-memory');
+      log.warn(
+        { err: err.message },
+        'Redis rate-limit check failed; falling back to in-memory'
+      );
     }
 
     // In-memory fallback (single-instance only)
     const now = Date.now();
     if (!_fallbackRateLimitMap.has(to)) _fallbackRateLimitMap.set(to, []);
-    const timestamps = _fallbackRateLimitMap.get(to).filter((t) => now - t < windowMs);
+    const timestamps = _fallbackRateLimitMap
+      .get(to)
+      .filter((t) => now - t < windowMs);
     if (timestamps.length >= max) {
       throw new Error(`Rate limit exceeded for ${to}`);
     }
@@ -161,7 +166,10 @@ class EmailService {
         return;
       } catch (err) {
         if (err.message.startsWith('Bounced address suppressed')) throw err;
-        log.warn({ err: err.message }, 'DB bounce check failed; falling back to in-memory');
+        log.warn(
+          { err: err.message },
+          'DB bounce check failed; falling back to in-memory'
+        );
       }
     }
 
@@ -372,7 +380,10 @@ class EmailService {
         );
       }
     } catch (err) {
-      log.warn({ err: err.message }, 'Failed to persist bounce to DB; using in-memory fallback');
+      log.warn(
+        { err: err.message },
+        'Failed to persist bounce to DB; using in-memory fallback'
+      );
       for (const addr of addresses) {
         _fallbackBounceList.set(addr, Date.now());
       }
