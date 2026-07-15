@@ -29,6 +29,8 @@ jobs:
       NODE_ENV: test
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/internops_test
       JWT_SECRET: ci-test-secret-do-not-use-in-prod
+      JWT_REFRESH_SECRET: ci-test-refresh-secret
+      JWT_REFRESH_EXPIRES_IN: 7d
       PORT: 5000
       CORS_ORIGIN: http://localhost:5173
       SEED_ADMIN_EMAIL: admin@internops.com
