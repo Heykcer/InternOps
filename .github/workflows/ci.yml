@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           cd backend
-          npm install --include=dev --no-audit --no-fund
+          npm install --include=dev --no-audit --no-fund --ignore-scripts
 
       - name: Wait for PostgreSQL
         run: |
@@ -76,7 +76,7 @@ jobs:
         shell: bash
         run: |
           cd frontend
-          npm install --include=dev --no-audit --no-fund
+          npm install --include=dev --no-audit --no-fund --ignore-scripts
 
       - name: Run Frontend Tests
         run: cd frontend && npm run test
